@@ -1,0 +1,23 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+path = "src/bin/bp.rs"
+name = "bp"
+
+[dependencies]
+cargo_px_env = "0.1"
+pavex = { version = "0.1.22" }
+pavex_tracing = { version = "0.1.22" }
+pavex_cli_client = { version = "0.1.22" }
+tracing = "0.1"
+
+# Configuration
+serde = { version = "1", features = ["derive"] }
+serde-aux = "4"
+dotenvy = "0.15.7"
+diesel = { version = "2.1.5", features = ["mysql"] }
+thiserror = "1"
+anyhow = "1"
