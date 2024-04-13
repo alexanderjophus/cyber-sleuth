@@ -26,14 +26,14 @@ CREATE TABLE `digimon` (
     `SPD lvl 99` BIGINT,
 
     PRIMARY KEY (`Name`)
-) CHARACTER SET latin1;
+);
 
 CREATE TABLE `digivolutions` (
     `Digimon From` VARCHAR(1024),
     `Digimon To` VARCHAR(1024),
 
     PRIMARY KEY (`Digimon From`, `Digimon To`)
-) CHARACTER SET latin1;
+);
 
 CREATE TABLE `digivolution_requirements` (
     `Name` VARCHAR(1024),
@@ -49,7 +49,7 @@ CREATE TABLE `digivolution_requirements` (
     `Extra Condition` VARCHAR(1024) NULL,
 
     PRIMARY KEY (`Name`)
-) CHARACTER SET latin1;
+);
 
 INSERT INTO `digimon` (`Name`,`Stage`,`Type`,`Attribute`,`Memory`,`Equip Slots`,`HP lvl 1`,`SP lvl 1`,`ATK lvl 1`,`DEF lvl 1`,`INT lvl 1`,`SPD lvl 1`,`HP lvl 50`,`SP lvl 50`,`ATK lvl 50`,`DEF lvl 50`,`INT lvl 50`,`SPD lvl 50`,`HP lvl 99`,`SP lvl 99`,`ATK lvl 99`,`DEF lvl 99`,`INT lvl 99`,`SPD lvl 99`)
 VALUES

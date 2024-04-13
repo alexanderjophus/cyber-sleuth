@@ -2,7 +2,7 @@ use diesel::prelude::*;
 
 #[derive(serde::Serialize, Queryable, Selectable)]
 #[diesel(table_name = crate::schema::digimon)]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[allow(non_snake_case)]
 pub struct Digimon {
     pub Name: String,

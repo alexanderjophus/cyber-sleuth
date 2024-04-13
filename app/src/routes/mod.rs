@@ -1,13 +1,16 @@
-use diesel::mysql::MysqlConnection;
+use std::error::Error;
+
 use diesel::prelude::*;
-use dotenvy::dotenv;
+use diesel::sqlite::SqliteConnection;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use pavex::blueprint::{router::GET, Blueprint};
 use pavex::f;
 use pavex::http::StatusCode;
 use pavex::request::{path::PathParams, query::QueryParams};
 use pavex::response::body::Json;
 use pavex::response::Response;
-use std::env;
+
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
 pub fn register(bp: &mut Blueprint) {
     bp.nest_at("/api", blueprint());
@@ -44,7 +47,7 @@ pub struct SearchDigimonParams {
 
 pub struct Digimon {
     // database connection
-    conn: MysqlConnection,
+    conn: SqliteConnection,
 }
 
 impl Default for Digimon {
@@ -55,14 +58,21 @@ impl Default for Digimon {
 
 impl Digimon {
     pub fn new() -> Self {
-        dotenv().ok();
+        let mut conn = SqliteConnection::establish(":memory:").unwrap();
+        Self::run_migrations(&mut conn).unwrap();
+        Self { conn }
+    }
 
-        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    fn run_migrations(
+        connection: &mut impl MigrationHarness<diesel::sqlite::Sqlite>,
+    ) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
+        // This will run the necessary migrations.
+        //
+        // See the documentation for `MigrationHarness` for
+        // all available methods.
+        connection.run_pending_migrations(MIGRATIONS)?;
 
-        Self {
-            conn: MysqlConnection::establish(&database_url)
-                .unwrap_or_else(|_| panic!("Error connecting to {}", database_url)),
-        }
+        Ok(())
     }
 
     pub fn list(&mut self) -> Result<Response, ListError> {
