@@ -30,6 +30,7 @@ fn build_router() -> pavex_matchit::Router<u32> {
 }
 async fn route_request(
     request: http::Request<hyper::body::Incoming>,
+    _connection_info: Option<pavex::connection::ConnectionInfo>,
     server_state: std::sync::Arc<ServerState>,
 ) -> pavex::response::Response {
     let (request_head, request_body) = request.into_parts();
@@ -159,7 +160,7 @@ pub mod route_0 {
         let response = post_processing_0(response, s_1).await;
         response
     }
-    pub async fn wrapping_0(
+    async fn wrapping_0(
         v0: &pavex::request::RequestHead,
         v1: pavex::request::path::MatchedPathPattern,
         v2: &pavex::router::AllowedMethods,
@@ -174,7 +175,7 @@ pub mod route_0 {
         let v5 = pavex::middleware::wrap_noop(v4).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v5)
     }
-    pub async fn wrapping_1(
+    async fn wrapping_1(
         v0: &pavex::request::RequestHead,
         v1: pavex::request::path::MatchedPathPattern,
         v2: &pavex::router::AllowedMethods,
@@ -191,20 +192,18 @@ pub mod route_0 {
         let v8 = pavex_tracing::logger(v7, v6).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v8)
     }
-    pub async fn handler(
-        v0: &pavex::router::AllowedMethods,
-    ) -> pavex::response::Response {
+    async fn handler(v0: &pavex::router::AllowedMethods) -> pavex::response::Response {
         let v1 = pavex::router::default_fallback(v0).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v1)
     }
-    pub async fn post_processing_0(
+    async fn post_processing_0(
         v0: pavex::response::Response,
         v1: &pavex_tracing::RootSpan,
     ) -> pavex::response::Response {
         let v2 = app::telemetry::response_logger(v0, v1).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v2)
     }
-    pub struct Next0<'a, 'b, T>
+    struct Next0<'a, 'b, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -227,7 +226,7 @@ pub mod route_0 {
             (self.next)(self.s_0, self.s_1, self.s_2)
         }
     }
-    pub struct Next1<'a, 'b, T>
+    struct Next1<'a, 'b, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -266,7 +265,7 @@ pub mod route_1 {
         let response = post_processing_0(response, s_0).await;
         response
     }
-    pub async fn wrapping_0(
+    async fn wrapping_0(
         v0: pavex::request::path::MatchedPathPattern,
         v1: &pavex::request::RequestHead,
     ) -> pavex::response::Response {
@@ -279,7 +278,7 @@ pub mod route_1 {
         let v4 = pavex::middleware::wrap_noop(v3).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v4)
     }
-    pub async fn wrapping_1(
+    async fn wrapping_1(
         v0: pavex::request::path::MatchedPathPattern,
         v1: &pavex::request::RequestHead,
     ) -> pavex::response::Response {
@@ -294,7 +293,7 @@ pub mod route_1 {
         let v7 = pavex_tracing::logger(v6, v5).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v7)
     }
-    pub async fn handler(v0: &pavex_tracing::RootSpan) -> pavex::response::Response {
+    async fn handler(v0: &pavex_tracing::RootSpan) -> pavex::response::Response {
         let mut v1 = app::routes::Digimon::new();
         let v2 = app::routes::Digimon::list(&mut v1);
         let v3 = match v2 {
@@ -312,14 +311,14 @@ pub mod route_1 {
         };
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v3)
     }
-    pub async fn post_processing_0(
+    async fn post_processing_0(
         v0: pavex::response::Response,
         v1: &pavex_tracing::RootSpan,
     ) -> pavex::response::Response {
         let v2 = app::telemetry::response_logger(v0, v1).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v2)
     }
-    pub struct Next0<'a, T>
+    struct Next0<'a, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -340,7 +339,7 @@ pub mod route_1 {
             (self.next)(self.s_0, self.s_1)
         }
     }
-    pub struct Next1<'a, T>
+    struct Next1<'a, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -383,7 +382,7 @@ pub mod route_2 {
         let response = post_processing_0(response, s_1).await;
         response
     }
-    pub async fn wrapping_0(
+    async fn wrapping_0(
         v0: pavex::request::path::RawPathParams<'_, '_>,
         v1: pavex::request::path::MatchedPathPattern,
         v2: &pavex::request::RequestHead,
@@ -398,7 +397,7 @@ pub mod route_2 {
         let v5 = pavex::middleware::wrap_noop(v4).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v5)
     }
-    pub async fn wrapping_1(
+    async fn wrapping_1(
         v0: pavex::request::path::RawPathParams<'_, '_>,
         v1: pavex::request::path::MatchedPathPattern,
         v2: &pavex::request::RequestHead,
@@ -415,7 +414,7 @@ pub mod route_2 {
         let v8 = pavex_tracing::logger(v7, v6).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v8)
     }
-    pub async fn handler(
+    async fn handler(
         v0: pavex::request::path::RawPathParams<'_, '_>,
         v1: &pavex_tracing::RootSpan,
     ) -> pavex::response::Response {
@@ -452,14 +451,14 @@ pub mod route_2 {
         };
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v6)
     }
-    pub async fn post_processing_0(
+    async fn post_processing_0(
         v0: pavex::response::Response,
         v1: &pavex_tracing::RootSpan,
     ) -> pavex::response::Response {
         let v2 = app::telemetry::response_logger(v0, v1).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v2)
     }
-    pub struct Next0<'a, 'b, 'c, T>
+    struct Next0<'a, 'b, 'c, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -482,7 +481,7 @@ pub mod route_2 {
             (self.next)(self.s_0, self.s_1, self.s_2)
         }
     }
-    pub struct Next1<'a, 'b, 'c, T>
+    struct Next1<'a, 'b, 'c, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -527,7 +526,7 @@ pub mod route_3 {
         let response = post_processing_0(response, s_0).await;
         response
     }
-    pub async fn wrapping_0(
+    async fn wrapping_0(
         v0: pavex::request::path::MatchedPathPattern,
         v1: &pavex::request::RequestHead,
     ) -> pavex::response::Response {
@@ -540,7 +539,7 @@ pub mod route_3 {
         let v4 = pavex::middleware::wrap_noop(v3).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v4)
     }
-    pub async fn wrapping_1(
+    async fn wrapping_1(
         v0: pavex::request::path::MatchedPathPattern,
         v1: &pavex::request::RequestHead,
     ) -> pavex::response::Response {
@@ -556,7 +555,7 @@ pub mod route_3 {
         let v7 = pavex_tracing::logger(v6, v5).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v7)
     }
-    pub async fn handler(
+    async fn handler(
         v0: &pavex_tracing::RootSpan,
         v1: &pavex::request::RequestHead,
     ) -> pavex::response::Response {
@@ -593,14 +592,14 @@ pub mod route_3 {
         };
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v6)
     }
-    pub async fn post_processing_0(
+    async fn post_processing_0(
         v0: pavex::response::Response,
         v1: &pavex_tracing::RootSpan,
     ) -> pavex::response::Response {
         let v2 = app::telemetry::response_logger(v0, v1).await;
         <pavex::response::Response as pavex::response::IntoResponse>::into_response(v2)
     }
-    pub struct Next0<'a, T>
+    struct Next0<'a, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
@@ -621,7 +620,7 @@ pub mod route_3 {
             (self.next)(self.s_0, self.s_1)
         }
     }
-    pub struct Next1<'a, 'b, T>
+    struct Next1<'a, 'b, T>
     where
         T: std::future::Future<Output = pavex::response::Response>,
     {
