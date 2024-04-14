@@ -24,14 +24,7 @@ async fn setup() -> anyhow::Result<Server> {
     // Load environment variables from a .env file, if it exists.
     let _ = dotenvy::dotenv();
 
-    let config = Config::load(None)?;
-
-    let tcp_listener = anyhow::Context::context(
-        config.server.listener().await,
-        "Failed to bind the server TCP listener",
-    )?;
-
-    let server_builder = Server::new().listen(tcp_listener);
+    let server_builder = Server::new();
 
     Ok(server_builder)
 }
