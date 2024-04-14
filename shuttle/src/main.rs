@@ -1,5 +1,4 @@
 use pavex::server::Server;
-use server::configuration::Config;
 use shuttle_runtime::SecretStore;
 
 mod shuttle_pavex;

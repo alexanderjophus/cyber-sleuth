@@ -118,3 +118,11 @@ jobs:
           cache-to: type=gha,mode=max
           push: true
           tags: ghcr.io/alexanderjophus/cyber-sleuth:latest
+
+  deploy:
+    needs: [test, fmt, lint, coverage, is-up-to-date]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shuttle-hq/deploy-action@main
+        with:
+          deploy-key: ${{ secrets.SHUTTLE_API_KEY }}

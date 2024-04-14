@@ -12,8 +12,6 @@ impl shuttle_runtime::Service for PavexService {
     async fn bind(mut self, addr: SocketAddr) -> Result<(), Error> {
         let application_state = build_application_state().await;
 
-        println!("addr: {:?}", addr);
-
         let server = self
             .0
             .bind(addr)
