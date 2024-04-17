@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
@@ -21,12 +19,10 @@ pub fn blueprint() -> Blueprint {
     PathParams::register(&mut bp);
     QueryParams::register(&mut bp);
     bp.request_scoped(f!(self::Digimon::new));
-    bp.route(GET, "/digimon", f!(self::Digimon::list))
-        .error_handler(f!(self::ListError::into_response));
+    bp.route(GET, "/digimon", f!(self::Digimon::search))
+        .error_handler(f!(self::SearchError::into_response));
     bp.route(GET, "/digimon/:name", f!(self::Digimon::get))
         .error_handler(f!(self::GetError::into_response));
-    bp.route(GET, "/digimon_search", f!(self::Digimon::search))
-        .error_handler(f!(self::SearchError::into_response));
     bp
 }
 
@@ -59,34 +55,8 @@ impl Default for Digimon {
 impl Digimon {
     pub fn new() -> Self {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
-        Self::run_migrations(&mut conn).unwrap();
+        conn.run_pending_migrations(MIGRATIONS).unwrap();
         Self { conn }
-    }
-
-    fn run_migrations(
-        connection: &mut impl MigrationHarness<diesel::sqlite::Sqlite>,
-    ) -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
-        // This will run the necessary migrations.
-        //
-        // See the documentation for `MigrationHarness` for
-        // all available methods.
-        connection.run_pending_migrations(MIGRATIONS)?;
-
-        Ok(())
-    }
-
-    pub fn list(&mut self) -> Result<Response, ListError> {
-        use super::schema::digimon::dsl::*;
-
-        let res = digimon
-            .load::<super::models::Digimon>(&mut self.conn)
-            .unwrap();
-
-        let res = Json::new(res)
-            .map_err(Into::into)
-            .map_err(ListError::UnexpectedError)?;
-
-        Ok(Response::new(StatusCode::OK).set_typed_body(res))
     }
 
     pub fn get(&mut self, params: &PathParams<GetDigimonParams>) -> Result<Response, GetError> {
@@ -140,21 +110,6 @@ impl Digimon {
             .map_err(SearchError::UnexpectedError)?;
 
         Ok(Response::new(StatusCode::OK).set_typed_body(res))
-    }
-}
-
-#[derive(thiserror::Error, Debug)]
-pub enum ListError {
-    #[error("Something went wrong. Please retry later.")]
-    UnexpectedError(#[source] anyhow::Error),
-}
-
-impl ListError {
-    pub fn into_response(&self) -> Response {
-        match self {
-            ListError::UnexpectedError(_) => Response::internal_server_error(),
-        }
-        .set_typed_body(format!("{self}"))
     }
 }
 

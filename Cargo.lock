@@ -1437,9 +1437,9 @@ dependencies = [
 
 [[package]]
 name = "pavex_cli_client"
-version = "0.1.22"
+version = "0.1.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "169bc425a55e1221e605bb42966de7b5d54a9b717e0d5f394f45b3df60bdbc8a"
+checksum = "3712f99399f166373ed5e2a90ac23a7f43e7246a480b762fb56e9ba0c2734505"
 dependencies = [
  "anyhow",
  "pavex",

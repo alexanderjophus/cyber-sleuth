@@ -12,18 +12,11 @@ async fn pavex(#[shuttle_runtime::Secrets] secrets: SecretStore) -> shuttle_pave
             .unwrap_or("development".to_string()),
     );
 
-    let server = setup().await?;
+    let _ = dotenvy::dotenv();
+
+    let server = Server::new();
 
     let shuttle_px = shuttle_pavex::PavexService(server);
 
     Ok(shuttle_px)
-}
-
-async fn setup() -> anyhow::Result<Server> {
-    // Load environment variables from a .env file, if it exists.
-    let _ = dotenvy::dotenv();
-
-    let server_builder = Server::new();
-
-    Ok(server_builder)
 }
