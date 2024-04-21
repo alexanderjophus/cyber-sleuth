@@ -90,8 +90,4 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    digimon,
-    digivolution_requirements,
-    digivolutions,
-);
+diesel::allow_tables_to_appear_in_same_query!(digimon, digivolution_requirements, digivolutions,);
